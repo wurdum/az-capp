@@ -17,6 +17,11 @@ if [[ -z $WU_ADMIN_SERVICE_PRINCIPAL_OBJECT_ID ]]; then
     exit 1
 fi
 
+RESOURCE_GROUP_ID=$(az group create --name $RESOURCE_GROUP --location $LOCATION --query "id" --output tsv)
+
+az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-gh --role owner --scopes $RESOURCE_GROUP_ID
+echo "Use the JSON above to set AZURE_CREDENTIALS GitHub Secret"
+
 READ_KV_SERVICE_PRINCIPAL_PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-kv-read --query "password" --output tsv)
 READ_KV_SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-kv-read --query "[].objectId" --output tsv)
 READ_KV_SERVICE_PRINCIPAL_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-kv-read --query "[].appId" --output tsv)
@@ -28,8 +33,6 @@ ACR_PUSH_SERVICE_PRINCIPAL_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCI
 ACR_PULL_SERVICE_PRINCIPAL_PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-acr-pull --query "password" --output tsv)
 ACR_PULL_SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-acr-pull --query "[].objectId" --output tsv)
 ACR_PULL_SERVICE_PRINCIPAL_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-acr-pull --query "[].appId" --output tsv)
-
-az group create --name $RESOURCE_GROUP --location $LOCATION
 
 az deployment group create \
     --resource-group $RESOURCE_GROUP \
