@@ -19,7 +19,7 @@ fi
 
 RESOURCE_GROUP_ID=$(az group create --name $RESOURCE_GROUP --location $LOCATION --query "id" --output tsv)
 
-az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-gh --role owner --scopes $RESOURCE_GROUP_ID
+az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-gh --role owner --scopes $RESOURCE_GROUP_ID --sdk-auth
 echo "Use the JSON above to set AZURE_CREDENTIALS GitHub Secret"
 
 READ_KV_SERVICE_PRINCIPAL_PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-kv-read --query "password" --output tsv)
