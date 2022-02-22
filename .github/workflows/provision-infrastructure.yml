@@ -1,0 +1,22 @@
+name: Provision infrastructure
+
+on:
+  push:
+    branches:
+    - 'main'
+    paths:
+    - 'deploy/**'
+
+jobs:
+  provision_infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          chmod +x ${GITHUB_WORKSPACE}/deploy/infrastructure/deploy.sh
+          ${GITHUB_WORKSPACE}/deploy/infrastructure/deploy.sh

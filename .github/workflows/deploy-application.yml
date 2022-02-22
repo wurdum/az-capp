@@ -1,0 +1,13 @@
+name: Deploy application
+
+on:
+  push:
+    branches:
+    - 'main'
+
+jobs:
+  deploy_application:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      run: docker build -t az-capp-http:$(date +%s) -t az-capp-http:latest -f src/AzCappHttp/Dockerfile .
