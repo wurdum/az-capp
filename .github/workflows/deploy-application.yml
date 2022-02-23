@@ -1,14 +1,27 @@
-name: Deploy application
+name: deploy-application
 
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows:
+      - 'provision-infrastructure'
+    types:
+      - completed
     branches:
-    - 'main'
+      - 'main'
 
 jobs:
   deploy_application:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: docker build -t az-capp-http:$(date +%s) -t az-capp-http:latest -f src/AzCappHttp/Dockerfile .
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          chmod +x ${GITHUB_WORKSPACE}/deploy/application/push-image.sh
+          chmod +x ${GITHUB_WORKSPACE}/deploy/application/deploy.sh
+          ${GITHUB_WORKSPACE}/deploy/application/push-image.sh
+          ${GITHUB_WORKSPACE}/deploy/application/deploy.sh

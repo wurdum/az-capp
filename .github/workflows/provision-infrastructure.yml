@@ -1,12 +1,12 @@
-name: Provision infrastructure
+name: provision-infrastructure
 
 on:
   workflow_dispatch:
   push:
     branches:
-    - 'main'
+      - 'main'
     paths:
-    - 'deploy/**'
+      - 'deploy/**'
 
 jobs:
   provision_infrastructure:

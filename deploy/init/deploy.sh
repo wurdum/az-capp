@@ -2,9 +2,9 @@
 
 cd $(dirname $0)
 
-PREFIX=wu
+PREFIX=wu-az-capp
+RESOURCE_GROUP=$PREFIX
 LOCATION=westeurope
-RESOURCE_GROUP=wu-capp
 SERVICE_PRINCIPAL_NAME=$RESOURCE_GROUP-sp
 
 if [[ $(az group exists --resource-group $RESOURCE_GROUP) = true ]]; then

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-RESOURCE_GROUP=wu-capp
+PREFIX=wu-az-capp
+RESOURCE_GROUP=$PREFIX
 
 if [[ $(az group exists --resource-group $RESOURCE_GROUP) = false ]]
 then

@@ -2,8 +2,8 @@
 
 cd $(dirname $0)
 
-PREFIX=wu
-RESOURCE_GROUP=wu-capp
+PREFIX=wu-az-capp
+RESOURCE_GROUP=$PREFIX
 
 if [[ $(az group exists --resource-group $RESOURCE_GROUP) = false ]]; then
     echo "Resource group $RESOURCE_GROUP doesn't exist!"

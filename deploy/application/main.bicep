@@ -12,7 +12,7 @@ resource kv 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
 }
 
 resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
-  name: '${prefix}acr${uniqueString(resourceGroup().id)}'
+  name: '${replace(prefix, '-', '')}acr${uniqueString(resourceGroup().id)}'
 }
 
 resource kenv 'Microsoft.Web/kubeEnvironments@2021-03-01' existing = {
@@ -20,7 +20,7 @@ resource kenv 'Microsoft.Web/kubeEnvironments@2021-03-01' existing = {
 }
 
 module cappHttp 'capp-http.bicep' = {
-  name: 'capp-http'
+  name: 'az-capp-http'
   params: {
     prefix: prefix
     location: location
@@ -32,7 +32,7 @@ module cappHttp 'capp-http.bicep' = {
     acrUsername: kv.getSecret('AcrPullServicePrincipalAppId')
     acrPassword: kv.getSecret('AcrPullServicePrincipalPassword')
 
-    imageName: 'wu-capp'
+    imageName: '${prefix}-http'
     imageTag: '1'
     ingressPort: 5555
   }

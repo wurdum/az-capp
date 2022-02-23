@@ -17,7 +17,7 @@ param location string = resourceGroup().location
 var containerRegistryPasswordSecretName = 'container-registry-password'
 
 resource containerApp 'Microsoft.Web/containerApps@2021-03-01' = {
-  name: '${prefix}-app'
+  name: '${prefix}-http'
   kind: 'containerapp'
   location: location
   tags: tags

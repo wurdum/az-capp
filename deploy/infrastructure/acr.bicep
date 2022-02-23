@@ -10,7 +10,7 @@ param location string = resourceGroup().location
 param acrSku string = 'Basic'
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-09-01' = {
-  name: '${prefix}acr${uniqueString(resourceGroup().id)}'
+  name: '${replace(prefix, '-', '')}acr${uniqueString(resourceGroup().id)}'
   location: location
   tags: tags
   sku: {
