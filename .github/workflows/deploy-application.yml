@@ -13,6 +13,8 @@ on:
 jobs:
   deploy_application:
     runs-on: ubuntu-latest
+    env:
+      PREFIX: wu-az-capp
     steps:
     - uses: actions/checkout@v2
     - uses: azure/login@v1
@@ -21,7 +23,17 @@ jobs:
     - uses: azure/CLI@v1
       with:
         inlineScript: |
-          chmod +x ${GITHUB_WORKSPACE}/deploy/application/push-image.sh
-          chmod +x ${GITHUB_WORKSPACE}/deploy/application/deploy.sh
-          ${GITHUB_WORKSPACE}/deploy/application/push-image.sh
-          ${GITHUB_WORKSPACE}/deploy/application/deploy.sh
+          echo "ACR_URL=$(az acr list -g ${{ env.PREFIX }} --query "[].loginServer" -o tsv)" >> $GITHUB_ENV
+          echo "ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalAppId --query "value" -o tsv)" >> $GITHUB_ENV
+          echo "ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalPassword --query "value" -o tsv)" >> $GITHUB_ENV
+    - uses: docker/login-action@v1
+      with:
+        registry: ${{ env.ACR_URL }}
+        username: ${{ env.ACR_USERNAME }}
+        password: ${{ env.ACR_PASSWORD }}
+    - uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: src/AzCappHttp/Dockerfile
+        push: true
+        tags: ${{ env.PREFIX }}-http:$(date +%s),${{ env.PREFIX }}-http:latest

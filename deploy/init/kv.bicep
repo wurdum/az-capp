@@ -3,6 +3,7 @@ param tags object
 param tenantId string
 param secrets array
 param adminServicePrincipalId string
+param deployServicePrincipalId string
 param readServicePrincipalId string
 
 param location string = resourceGroup().location
@@ -35,6 +36,16 @@ resource kv 'Microsoft.KeyVault/vaults@2021-10-01' = {
           ]
           secrets: [
             'all'
+          ]
+        }
+      }
+      {
+        objectId: deployServicePrincipalId
+        tenantId: tenantId
+        permissions: {
+          secrets: [
+            'get'
+            'list'
           ]
         }
       }

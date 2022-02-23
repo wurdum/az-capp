@@ -22,6 +22,8 @@ RESOURCE_GROUP_ID=$(az group create --name $RESOURCE_GROUP --location $LOCATION 
 az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-gh --role owner --scopes $RESOURCE_GROUP_ID --sdk-auth
 echo "Use the JSON above to set AZURE_CREDENTIALS GitHub Secret"
 
+DEPLOY_SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-gh --query "[].objectId" --output tsv)
+
 READ_KV_SERVICE_PRINCIPAL_PASSWORD=$(az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME-kv-read --query "password" --output tsv)
 READ_KV_SERVICE_PRINCIPAL_OBJECT_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-kv-read --query "[].objectId" --output tsv)
 READ_KV_SERVICE_PRINCIPAL_APP_ID=$(az ad sp list --display-name $SERVICE_PRINCIPAL_NAME-kv-read --query "[].appId" --output tsv)
@@ -40,6 +42,7 @@ az deployment group create \
     --parameters \
         prefix=$PREFIX \
         adminServicePrincipalObjectId=$WU_ADMIN_SERVICE_PRINCIPAL_OBJECT_ID \
+        deployServicePrincipalObjectId=$DEPLOY_SERVICE_PRINCIPAL_OBJECT_ID \
         readKvServicePrincipalObjectId=$READ_KV_SERVICE_PRINCIPAL_OBJECT_ID \
         readKvServicePrincipalAppId=$READ_KV_SERVICE_PRINCIPAL_APP_ID \
         readKvServicePrincipalPassword=$READ_KV_SERVICE_PRINCIPAL_PASSWORD \

@@ -18,8 +18,8 @@ param acrPushServicePrincipalObjectId string
 param acrPushServicePrincipalAppId string
 
 param adminServicePrincipalObjectId string
+param deployServicePrincipalObjectId string
 param location string = resourceGroup().location
-
 
 var tags = {
   Project: resourceGroup().name
@@ -33,6 +33,7 @@ module kv 'kv.bicep' = {
     tags: tags
     tenantId: tenant().tenantId
     adminServicePrincipalId: adminServicePrincipalObjectId
+    deployServicePrincipalId: deployServicePrincipalObjectId
     readServicePrincipalId: readKvServicePrincipalObjectId
     secrets: [
       {
