@@ -26,6 +26,7 @@ jobs:
           echo "ACR_URL=$(az acr list -g ${{ env.PREFIX }} --query "[].loginServer" -o tsv)" >> $GITHUB_ENV
           echo "ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalAppId --query "value" -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalPassword --query "value" -o tsv)" >> $GITHUB_ENV
+          echo "ACR_IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
     - uses: docker/login-action@v1
       with:
         registry: ${{ env.ACR_URL }}
@@ -36,4 +37,4 @@ jobs:
         context: .
         file: src/AzCappHttp/Dockerfile
         push: true
-        tags: ${{ env.PREFIX }}-http:$(date +%s),${{ env.PREFIX }}-http:latest
+        tags: ${{ env.PREFIX }}-http:${{ env.ACR_IMAGE_TAG }},${{ env.PREFIX }}-http:latest
