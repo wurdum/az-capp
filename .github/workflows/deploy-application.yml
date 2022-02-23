@@ -37,4 +37,4 @@ jobs:
         context: .
         file: src/AzCappHttp/Dockerfile
         push: true
-        tags: ${{ env.PREFIX }}-http:${{ env.ACR_IMAGE_TAG }},${{ env.PREFIX }}-http:latest
+        tags: ${{ env.ACR_URL }}/${{ env.PREFIX }}-http:${{ env.ACR_IMAGE_TAG }},${{ env.ACR_URL }}/${{ env.PREFIX }}-http:latest
