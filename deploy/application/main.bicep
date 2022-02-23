@@ -33,7 +33,7 @@ module cappHttp 'capp-http.bicep' = {
     acrPassword: kv.getSecret('AcrPullServicePrincipalPassword')
 
     imageName: '${prefix}-http'
-    imageTag: '1'
+    imageTag: 'latest'
     ingressPort: 5555
   }
 }
