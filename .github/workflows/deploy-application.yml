@@ -38,3 +38,8 @@ jobs:
         file: src/AzCappHttp/Dockerfile
         push: true
         tags: ${{ env.ACR_URL }}/${{ env.PREFIX }}-http:${{ env.ACR_IMAGE_TAG }},${{ env.ACR_URL }}/${{ env.PREFIX }}-http:latest
+    - uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          chmod +x ${GITHUB_WORKSPACE}/deploy/application/deploy.sh
+          ${GITHUB_WORKSPACE}/deploy/application/deploy.sh
