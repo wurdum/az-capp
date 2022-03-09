@@ -27,10 +27,11 @@ jobs:
           echo "ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalAppId --query "value" -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalPassword --query "value" -o tsv)" >> $GITHUB_ENV
           echo "ACR_IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
-    - run: |
-        echo "::add-mask::$ACR_URL"
-        echo "::add-mask::$ACR_USERNAME"
-        echo "::add-mask::$ACR_PASSWORD"
+    - name: mask-acr-creds
+      run: |
+        echo "::add-mask::${{ env.ACR_URL }}"
+        echo "::add-mask::${{ env.ACR_USERNAME }}"
+        echo "::add-mask::${{ env.ACR_PASSWORD }}"
     - uses: docker/login-action@v1
       with:
         registry: ${{ env.ACR_URL }}
