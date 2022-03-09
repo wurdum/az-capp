@@ -47,7 +47,7 @@ jobs:
         context: .
         file: src/AzCappHttp/Dockerfile
         push: true
-        tags: ${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:${{ steps.acr-creds.outputs.acr-image-tag }},${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:latest
+        tags: ${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:${{ steps.acr-creds.outputs.acr-image-tagg }},${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:latest
     - uses: azure/CLI@v1
       with:
         inlineScript: |
