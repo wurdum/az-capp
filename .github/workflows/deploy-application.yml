@@ -20,29 +20,34 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: azure/CLI@v1
+    - id: acr-creds
+      uses: azure/CLI@v1
       with:
         inlineScript: |
-          echo "ACR_URL=$(az acr list -g ${{ env.PREFIX }} --query "[].loginServer" -o tsv)" >> $GITHUB_ENV
-          echo "ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalAppId --query "value" -o tsv)" >> $GITHUB_ENV
-          echo "ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalPassword --query "value" -o tsv)" >> $GITHUB_ENV
-          echo "ACR_IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
-    - name: mask-acr-creds
-      run: |
-        echo "::add-mask::${{ env.ACR_URL }}"
-        echo "::add-mask::${{ env.ACR_USERNAME }}"
-        echo "::add-mask::${{ env.ACR_PASSWORD }}"
+          ACR_URL=$(az acr list -g ${{ env.PREFIX }} --query "[].loginServer" -o tsv)
+          ACR_USERNAME=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalAppId --query "value" -o tsv)
+          ACR_PASSWORD=$(az keyvault secret show --vault-name ${{ env.PREFIX }}-kv --name AcrPushServicePrincipalPassword --query "value" -o tsv)
+          ACR_IMAGE_TAG=$(date +%s)
+
+          echo "::add-mask::$ACR_URL"
+          echo "::add-mask::$ACR_USERNAME"
+          echo "::add-mask::$ACR_PASSWORD"
+
+          echo "::set-output name=acr-url::$ACR_URL"
+          echo "::set-output name=acr-username::$ACR_USERNAME"
+          echo "::set-output name=acr-password::$ACR_PASSWORD"
+          echo "::set-output name=acr-image-tag::$ACR_IMAGE_TAG"
     - uses: docker/login-action@v1
       with:
-        registry: ${{ env.ACR_URL }}
-        username: ${{ env.ACR_USERNAME }}
-        password: ${{ env.ACR_PASSWORD }}
+        registry: ${{ steps.acr-creds.outputs.acr-url }}
+        username: ${{ steps.acr-creds.outputs.acr-username }}
+        password: ${{ steps.acr-creds.outputs.acr-password }}
     - uses: docker/build-push-action@v2
       with:
         context: .
         file: src/AzCappHttp/Dockerfile
         push: true
-        tags: ${{ env.ACR_URL }}/${{ env.PREFIX }}-http:${{ env.ACR_IMAGE_TAG }},${{ env.ACR_URL }}/${{ env.PREFIX }}-http:latest
+        tags: ${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:${{ steps.acr-creds.outputs.acr-image-tag }},${{ steps.acr-creds.outputs.acr-url }}/${{ env.PREFIX }}-http:latest
     - uses: azure/CLI@v1
       with:
         inlineScript: |
