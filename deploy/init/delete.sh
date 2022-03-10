@@ -12,6 +12,10 @@ else
     echo "Done"
 fi
 
+echo "Deleting Budget..."
+az consumption budget delete --budget-name $RESOURCE_GROUP-budget
+echo "Done"
+
 echo "Deleting Service Principals $RESOURCE_GROUP..."
 az ad sp list --filter "startswith(displayname, '$RESOURCE_GROUP')" --query "[].objectId" --output tsv | xargs -t -I{} az ad sp delete --id {}
 echo "Done"

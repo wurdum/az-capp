@@ -12,6 +12,11 @@ if [[ $(az group exists --resource-group $RESOURCE_GROUP) = true ]]; then
     exit 1
 fi
 
+if [[ -z $WU_ADMIN_CONTACT_EMAIL ]]; then
+    echo "Environment variable WU_ADMIN_CONTACT_EMAIL is not set!"
+    exit 1
+fi
+
 if [[ -z $WU_ADMIN_SERVICE_PRINCIPAL_OBJECT_ID ]]; then
     echo "Environment variable WU_ADMIN_SERVICE_PRINCIPAL_OBJECT_ID is not set!"
     exit 1
@@ -51,4 +56,5 @@ az deployment group create \
         acrPushServicePrincipalPassword=$ACR_PUSH_SERVICE_PRINCIPAL_PASSWORD \
         acrPullServicePrincipalObjectId=$ACR_PULL_SERVICE_PRINCIPAL_OBJECT_ID \
         acrPullServicePrincipalAppId=$ACR_PULL_SERVICE_PRINCIPAL_APP_ID \
-        acrPullServicePrincipalPassword=$ACR_PULL_SERVICE_PRINCIPAL_PASSWORD
+        acrPullServicePrincipalPassword=$ACR_PULL_SERVICE_PRINCIPAL_PASSWORD \
+        budgetContactEmail=$WU_ADMIN_CONTACT_EMAIL

@@ -21,8 +21,19 @@ param adminServicePrincipalObjectId string
 param deployServicePrincipalObjectId string
 param location string = resourceGroup().location
 
+param budgetContactEmail string
+
+
 var tags = {
   Project: resourceGroup().name
+}
+
+module budget 'bud.bicep' = {
+  name: 'budget'
+  params: {
+    amount: 10
+    contactEmail: budgetContactEmail
+  }
 }
 
 module kv 'kv.bicep' = {
