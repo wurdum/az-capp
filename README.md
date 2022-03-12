@@ -4,7 +4,9 @@ This project is an example of how [Azure Container App](https://docs.microsoft.c
 Application is minimal ASP .NET Core API with preconfigured code style and analyzers.
 The infrastructure code is based on [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/) and describes the following Azure resources:
 
-![Azure resources diagram](/docs/diag.png)
+<p align="center">
+  <img src="./docs/diag.png">
+</p>
 
 ## How to deploy
 
